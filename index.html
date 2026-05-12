@@ -203,7 +203,7 @@
     .chart-wrap { position:relative; height:220px; }
     .chart-wrap-tall { position:relative; height:280px; }
     .chart-wrap-bar { position:relative; height:260px; }
-    .alliance-banner { background:linear-gradient(135deg,var(--ccc-dark-blue) 0%,var(--avc-crimson) 100%); border-radius:var(--radius-lg); padding:18px 22px; display:flex; align-items:flex-start; gap:14px; margin-bottom:24px; }
+    .alliance-banner { background:var(--ccc-dark-blue); border-radius:var(--radius-lg); padding:18px 22px; display:flex; align-items:flex-start; gap:14px; margin-bottom:24px; }
     .alliance-icon { width:40px; height:40px; background:var(--ccc-gold); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .alliance-icon svg { color:var(--ccc-dark-blue); }
     .alliance-text strong { display:block; font-size:14px; font-weight:700; color:var(--ccc-gold); margin-bottom:4px; }
@@ -490,10 +490,10 @@
     @media (max-width:760px) { .cccco-topbar-stamp { padding:4px 10px; height:34px; } .cccco-topbar-stamp img { height:20px; } } @media (max-width:520px) { .cccco-topbar-stamp { display:none; } }
 
     /* Overview hero card — wraps title + ticker on dark slate */
-    .overview-hero { background:linear-gradient(135deg,var(--ccc-dark-blue) 0%,var(--ccc-dark-blue) 70%,var(--avc-crimson) 100%); border-radius:var(--radius-lg); padding:22px 26px 18px; margin-bottom:24px; box-shadow:0 10px 28px rgba(0,107,103,0.22),0 2px 6px rgba(0,107,103,0.10); border:1px solid rgba(255,255,255,0.10); border-top:3px solid var(--ccc-gold); }
+    .overview-hero { background:var(--avc-crimson); border-radius:var(--radius-lg); padding:22px 26px 18px; margin-bottom:24px; box-shadow:0 8px 24px rgba(139,28,64,0.22),0 2px 6px rgba(139,28,64,0.12); border:1px solid rgba(255,255,255,0.10); border-top:3px solid var(--ccc-gold); }
     .overview-hero h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:#FFFFFF; line-height:1.2; margin:0; letter-spacing:-0.02em; }
     .overview-hero .overview-ticker { margin-top:12px; }
-    [data-theme="dark"] .overview-hero { background:var(--ccc-darker-blue); border-top-color:var(--ccc-gold); }
+    [data-theme="dark"] .overview-hero { background:#5C1029; border-top-color:var(--ccc-gold); }
     @media (max-width:760px) {
       .overview-hero { padding:18px 18px 14px; }
       .overview-hero h2 { font-size:22px; }
