@@ -105,7 +105,7 @@
     .sidebar-section-label { font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.62); padding:20px 20px 6px; }
     .nav-item { display:flex; align-items:center; gap:10px; padding:10px 20px; font-size:13.5px; font-weight:600; color:rgba(255,255,255,0.92); cursor:pointer; border-left:3px solid transparent; transition:all var(--transition); border:none; background:none; width:100%; text-align:left; }
     .nav-item:hover { background:rgba(255,255,255,0.10); color:#fff; }
-    .nav-item.active { background:rgba(255,205,0,0.15); color:var(--ccc-gold); border-left:3px solid var(--ccc-gold); }
+    .nav-item.active { background:rgba(255,255,255,0.06); color:#fff; border-left:3px solid var(--avc-crimson); }
     .nav-item svg { flex-shrink:0; opacity:0.8; }
     .nav-item.active svg { opacity:1; }
     .sidebar-footer { margin-top:auto; padding:16px 20px; border-top:1px solid rgba(255,255,255,0.1); }
@@ -116,7 +116,7 @@
     .topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
     .topbar-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ccc-dark-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     [data-theme="dark"] .topbar-title { color:var(--accent-light); }
-    .topbar-badge { background:var(--ccc-gold); color:var(--ccc-dark-blue); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+    .topbar-badge { background:var(--ccc-light-blue); color:var(--ccc-darker-blue); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
     .topbar-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
     .icon-btn { width:38px; height:38px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); transition:all var(--transition); border:1px solid var(--border); background:var(--bg-surface); }
     .icon-btn:hover { background:var(--bg-surface-2); color:var(--accent); border-color:var(--border-strong); }
@@ -155,7 +155,7 @@
     .grant-meta-item { display:flex; flex-direction:column; gap:2px; }
     .grant-meta-item label { font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.5); }
     .grant-meta-item span { font-size:13px; font-weight:600; color:#fff; }
-    .grant-meta-item span.gold { color:var(--ccc-gold); }
+    .grant-meta-item span.gold { color:var(--avc-crimson); font-weight:700; }
     .grant-meta-divider { width:1px; height:32px; background:rgba(255,255,255,0.15); }
     /* Overview KPIs — locked 5-up layout for the five tiles so they sit evenly in one row on desktop */
     .kpi-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:24px; }
@@ -191,6 +191,8 @@
     .kpi-accent-bar.gold { background:var(--ccc-gold); }
     .kpi-accent-bar.grey { background:var(--ccc-dark-grey); }
     .kpi-accent-bar.green { background:var(--success); }
+    .kpi-accent-bar.crimson { background:var(--avc-crimson); }
+    .kpi-value.crimson { color:var(--avc-crimson); }
     .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
     .chart-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); }
     .chart-card-full { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); margin-bottom:24px; }
@@ -631,7 +633,7 @@
           <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label" data-i18n="kpi_grant_tier">Grant Tier</div><div class="kpi-value medium-blue">Tier 2</div><div class="kpi-sub" data-i18n="kpi_grant_tier_sub">2026&ndash;2028 EEO IBP</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label" data-i18n="kpi_dr_target">DRS Trained</div><div class="kpi-value blue">20</div><div class="kpi-sub" data-i18n="kpi_dr_target_sub">Classified staff over two cohorts</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label" data-i18n="kpi_mentor_target">Mentor Cohort</div><div class="kpi-value medium-blue">4 + 8</div><div class="kpi-sub" data-i18n="kpi_mentor_target_sub">4 faculty mentors &middot; 8 mentees</div></div>
-          <div class="kpi-card"><div class="kpi-accent-bar grey"></div><div class="kpi-label" data-i18n="kpi_focus">Focus Areas</div><div class="kpi-value grey">4</div><div class="kpi-sub" data-i18n="kpi_focus_sub">Equity in Hiring &middot; Inclusive Pedagogy &middot; Mentorship &middot; Reflective Practice</div></div>
+          <div class="kpi-card"><div class="kpi-accent-bar crimson"></div><div class="kpi-label" data-i18n="kpi_focus">Focus Areas</div><div class="kpi-value crimson">4</div><div class="kpi-sub" data-i18n="kpi_focus_sub">Equity in Hiring &middot; Inclusive Pedagogy &middot; Mentorship &middot; Reflective Practice</div></div>
         </div>
 
         <div class="alliance-banner">
