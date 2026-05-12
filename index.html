@@ -45,16 +45,18 @@
 
     :root {
       /* ════════════ ANTELOPE VALLEY COLLEGE BRAND PALETTE ════════════
-         Per AVC Brand Standards Guide:
-           AVC Marauder Crimson (primary anchor): #7B1F35
-           AVC Crimson Deep:                      #56121F
-           AVC Crimson Light:                     #A52639
-           AVC Warm Sand:                         #E8C56C
-           Yellow 80 (deeper accent):          #E5B800
-         Variable names kept as --ccc-* to preserve the existing
-         component CSS; only the hex values shift to AVC brand. */
-      --ccc-dark-blue:#7B1F35; --ccc-darker-blue:#56121F; --ccc-medium-blue:#A52639;
-      --ccc-light-blue:#C76A77; --ccc-gold:#E8C56C; --ccc-dark-gold:#B5933A;
+           Minimalist + professional. Deep teal anchors, soft blue secondary,
+           warm sand for accent, crimson reserved for sparing highlights.
+           AVC Deep Teal (primary anchor):   #006B67
+           AVC Deep Teal Dark:                #004F4C
+           AVC Soft Blue (supporting):        #8DB9CA
+           AVC Soft Blue Light:               #B5D2DE
+           AVC Warm Sand (gold accent):       #E8C56C
+           AVC Crimson (sparing accent):      #7B1F35
+        */
+      --ccc-dark-blue:#006B67; --ccc-darker-blue:#004F4C; --ccc-medium-blue:#8DB9CA;
+      --ccc-light-blue:#B5D2DE; --ccc-gold:#E8C56C; --ccc-dark-gold:#B5933A;
+      --avc-crimson:#7B1F35;  /* sparing accent only — not for fills */
       --ccc-light-gold:#FFE680; --ccc-dark-grey:#555759; --ccc-medium-grey:#717271; --ccc-light-grey:#B2B3B2;
       --bg:#F3F6F9; --bg-surface:#FFFFFF; --bg-surface-2:#EEF2F6; --bg-card:#FFFFFF;
       --border:rgba(0,62,90,0.12); --border-strong:rgba(0,62,90,0.22);
@@ -485,10 +487,10 @@
     @media (max-width:760px) { .cccco-topbar-stamp { padding:4px 10px; height:34px; } .cccco-topbar-stamp img { height:20px; } } @media (max-width:520px) { .cccco-topbar-stamp { display:none; } }
 
     /* Overview hero card — wraps title + ticker on dark slate */
-    .overview-hero { background:linear-gradient(135deg,var(--ccc-dark-blue) 0%,var(--ccc-darker-blue) 100%); border-radius:var(--radius-lg); padding:22px 26px 18px; margin-bottom:24px; box-shadow:0 8px 24px rgba(0,0,0,0.18),0 2px 6px rgba(0,0,0,0.10); border:1px solid rgba(255,255,255,0.08); }
+    .overview-hero { background:var(--ccc-dark-blue); border-radius:var(--radius-lg); padding:22px 26px 18px; margin-bottom:24px; box-shadow:0 8px 24px rgba(0,107,103,0.20),0 2px 6px rgba(0,107,103,0.10); border:1px solid rgba(255,255,255,0.10); border-top:3px solid var(--ccc-gold); }
     .overview-hero h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:#FFFFFF; line-height:1.2; margin:0; letter-spacing:-0.02em; }
     .overview-hero .overview-ticker { margin-top:12px; }
-    [data-theme="dark"] .overview-hero { background:linear-gradient(135deg,var(--ccc-darker-blue) 0%,#0B1220 100%); }
+    [data-theme="dark"] .overview-hero { background:var(--ccc-darker-blue); border-top-color:var(--ccc-gold); }
     @media (max-width:760px) {
       .overview-hero { padding:18px 18px 14px; }
       .overview-hero h2 { font-size:22px; }
