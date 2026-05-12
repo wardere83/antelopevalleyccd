@@ -97,7 +97,7 @@
     .app { display:flex; min-height:100dvh; }
     .sidebar { position:fixed; left:0; top:0; height:100dvh; width:var(--sidebar-w); background:var(--ccc-dark-blue); color:#fff; display:flex; flex-direction:column; z-index:200; overflow-y:auto; overflow-x:hidden; transition:transform var(--transition); scrollbar-width:none; will-change:transform; }
     .sidebar::-webkit-scrollbar { display:none; }
-    .sidebar-logo { padding:24px 20px 20px; border-bottom:1px solid rgba(255,255,255,0.12); }
+    .sidebar-logo { padding:26px 22px 22px; border-bottom:1px solid rgba(255,255,255,0.10); }
     .logo-mark { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
     .logo-icon-wrap { width:36px; height:36px; background:var(--ccc-gold); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .logo-icon-wrap svg { color:var(--ccc-dark-blue); }
@@ -138,7 +138,7 @@
     .section { display:none; }
     .section.active { display:block; }
     .page-header { margin-bottom:24px; }
-    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--avc-crimson); line-height:1.2; margin-bottom:4px; }
+    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--avc-crimson); line-height:1.15; margin-bottom:6px; letter-spacing:-0.02em; }
     [data-theme="dark"] .page-header h2 { color:var(--accent-light); }
     .page-header p { font-size:14px; color:var(--text-muted); }
 
@@ -480,7 +480,9 @@
     .cccco-logo-link { display:block; text-decoration:none; margin-bottom:6px; padding:4px 0; }
     .cccco-logo-link:focus-visible { outline:2px solid var(--ccc-gold); outline-offset:4px; border-radius:6px; }
     .cccco-wordmark { display:block; width:100%; max-width:220px; height:auto; }
-    .cccco-wordmark--white { /* placed on a white card so the AVC logo artwork is fully visible against the AVC Crimson sidebar */ filter:none; }
+    .cccco-wordmark--white { filter:none; }
+    .avc-logo-card { display:block; background:#fff; padding:14px 18px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+    .avc-logo-img { display:block; width:100%; max-width:170px; height:auto; }
     .logo-divider { height:1px; background:rgba(255,255,255,0.16); margin:14px 0 12px; }
     .logo-attribution { font-size:11px; color:rgba(255,255,255,0.72); letter-spacing:0.04em; margin-top:8px; line-height:1.45; }
     .cccco-topbar-stamp { display:inline-flex; align-items:center; padding:6px 14px; height:44px; border-radius:22px; border:1px solid var(--border); background:var(--bg-surface); box-shadow:0 1px 2px rgba(0,62,90,0.04); transition:box-shadow .15s ease, border-color .15s ease; }
@@ -490,7 +492,7 @@
     @media (max-width:760px) { .cccco-topbar-stamp { padding:4px 10px; height:34px; } .cccco-topbar-stamp img { height:20px; } } @media (max-width:520px) { .cccco-topbar-stamp { display:none; } }
 
     /* Overview hero card — wraps title + ticker on dark slate */
-    .overview-hero { background:var(--avc-crimson); border-radius:var(--radius-lg); padding:22px 26px 18px; margin-bottom:24px; box-shadow:0 8px 24px rgba(139,28,64,0.22),0 2px 6px rgba(139,28,64,0.12); border:1px solid rgba(255,255,255,0.10); border-top:3px solid var(--ccc-gold); }
+    .overview-hero { background:var(--avc-crimson); border-radius:var(--radius-lg); padding:24px 28px 20px; margin-bottom:24px; box-shadow:0 4px 16px rgba(139,28,64,0.18); border:none; border-top:3px solid var(--ccc-gold); }
     .overview-hero h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:#FFFFFF; line-height:1.2; margin:0; letter-spacing:-0.02em; }
     .overview-hero .overview-ticker { margin-top:12px; }
     [data-theme="dark"] .overview-hero { background:#5C1029; border-top-color:var(--ccc-gold); }
@@ -511,9 +513,7 @@
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a class="cccco-logo-link" href="https://www.avc.edu" target="_blank" rel="noopener noreferrer" aria-label="Antelope Valley College"><img class="cccco-wordmark cccco-wordmark--white" src="avc-logo-white.svg" alt="Antelope Valley College" style="max-width:200px;height:auto;" /></a>
-      <div class="logo-sub">LIFT Mentor Match Pilot Program</div>
-      <div class="logo-attribution">Region 6 · 10-College LIFT Alliance</div>
+      <a class="cccco-logo-link" href="https://www.avc.edu" target="_blank" rel="noopener noreferrer" aria-label="Antelope Valley College"><span class="avc-logo-card"><img class="avc-logo-img" src="avc-logo.svg" alt="Antelope Valley College" /></span></a>
     </div>
 
     <div class="sidebar-section-label" data-i18n="sb_dashboard">Dashboard</div>

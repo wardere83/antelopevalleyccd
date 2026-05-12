@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 90" role="img" aria-label="Antelope Valley College">
-  <g fill="#fff">
-    <text x="0" y="44" font-family="'Oswald','Helvetica Neue',sans-serif" font-weight="700" font-size="42" letter-spacing="2">AVC</text>
-    <rect x="92" y="14" width="3" height="60"/>
-    <text x="106" y="34" font-family="'Inter','Helvetica Neue',sans-serif" font-weight="600" font-size="13" letter-spacing="2.4">ANTELOPE VALLEY</text>
-    <text x="106" y="56" font-family="'Inter','Helvetica Neue',sans-serif" font-weight="500" font-size="11" letter-spacing="1.6" opacity="0.86">COMMUNITY COLLEGE DISTRICT</text>
-    <text x="106" y="74" font-family="'Inter','Helvetica Neue',sans-serif" font-weight="500" font-size="9.5" letter-spacing="1.4" opacity="0.66">REGION 6 · LIFT ALLIANCE</text>
-  </g>
-</svg>
