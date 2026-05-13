@@ -515,18 +515,25 @@
       .overview-hero { padding:18px 18px 14px; }
       .overview-hero h2 { font-size:22px; }
     }
+    /* Accessibility: skip-to-content + focus styles */
+    .skip-link { position:absolute; left:8px; top:-40px; padding:8px 14px; background:var(--ccc-dark-blue,#002F6D); color:#fff; font-weight:600; border-radius:6px; z-index:9999; text-decoration:none; }
+    .skip-link:focus { top:8px; outline:2px solid #fff; outline-offset:2px; }
+    *:focus-visible { outline:2px solid var(--ccc-dark-blue,#002F6D); outline-offset:2px; border-radius:4px; }
+    .nav-item:focus-visible, .filter-btn:focus-visible, .icon-btn:focus-visible, .translate-btn:focus-visible, .lang-option:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
   </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="translation-active-bar" id="transBanner">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
   Viewing in: <strong id="transLangName">English</strong>
   <span class="translation-dismiss" onclick="resetLang()">✕ Reset to English</span>
 </div>
 
 <div class="app">
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Dashboard sections">
     <div class="sidebar-logo">
       <a class="cccco-logo-link" href="https://www.avc.edu" target="_blank" rel="noopener noreferrer" aria-label="Antelope Valley College"><img class="avc-logo-img" src="avc-logo-sidebar.svg" alt="Antelope Valley College" /></a>
       <div class="avc-project-name">LIFT Mentor Match Pilot Program</div>
@@ -534,38 +541,38 @@
 
     <div class="sidebar-section-label" data-i18n="sb_dashboard">Dashboard</div>
     <button class="nav-item active" onclick="showSection('overview',this)" data-i18n="nav_overview">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
       Overview
     </button>
     <button class="nav-item" onclick="showSection('districts',this)" data-i18n="nav_districts">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
       Project Profile
     </button>
 
     <div class="sidebar-section-label" data-i18n="sb_performance">Performance</div>
     <button class="nav-item" onclick="showSection('goals',this)" data-i18n="nav_goals">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       Goals &amp; Objectives
     </button>
     <button class="nav-item" onclick="showSection('budget',this)" data-i18n="nav_budget">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Budget Breakdown
     </button>
 
     <button class="nav-item" onclick="showSection('timeline',this)" data-i18n="nav_timeline">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Timeline
     </button>
 
     <div class="sidebar-section-label" data-i18n="sb_program">Team</div>
     <button class="nav-item" onclick="showSection('contacts',this)" data-i18n="nav_contacts">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Contacts
     </button>
 
     <div class="sidebar-section-label" data-i18n="sb_spend_monitor">Spend Monitor</div>
     <button class="nav-item" onclick="showSection('spenddown',this)" data-i18n="nav_spenddown">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
       Spend-Down Monitor
     </button>
 
@@ -581,8 +588,8 @@
   <div class="main">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open navigation menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <span class="topbar-title" data-i18n="topbar_title">AVC Project</span>
         <span class="topbar-badge">2026–2028 EEO IBP</span>
@@ -594,12 +601,12 @@
       </div>
       
         <div class="translate-wrap">
-          <button class="translate-btn" onclick="toggleTranslate()" id="transBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+          <button class="translate-btn" onclick="toggleTranslate()" id="transBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Select language">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
             <span id="transLabel">Translate</span>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="translate-dropdown" id="transDropdown">
+          <div class="translate-dropdown" id="transDropdown" role="listbox">
             <div class="translate-dropdown-header" data-i18n="select_language">Select Language</div>
             <button class="lang-option active" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span><span class="lang-native">English</span></button>
             <button class="lang-option" onclick="setLang('es')"><span class="lang-flag">🇲🇽</span><span class="lang-name">Spanish</span><span class="lang-native">Español</span></button>
@@ -609,16 +616,16 @@
             <button class="lang-option" onclick="setLang('zh')"><span class="lang-flag">🇹🇼</span><span class="lang-name">Chinese (Traditional)</span><span class="lang-native">繁體中文</span></button>
           </div>
         </div>
-        <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle light or dark theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
       </div>
     </header>
 
-    <main class="content">
+    <main class="content" id="main-content" tabindex="-1" aria-live="polite">
 
       <!-- OVERVIEW -->
-      <div id="section-overview" class="section active">
+      <div id="section-overview" class="section active" role="region" aria-label="overview section">
         <div class="overview-hero">
           <h2 data-i18n="overview_title">AVC Project Overview</h2>
           <div class="overview-ticker" aria-label="Program overview headline">
@@ -649,7 +656,7 @@
         </div>
 
         <div class="alliance-banner">
-          <div class="alliance-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="alliance-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <div class="alliance-text">
             <strong data-i18n="lift_title">Program Spotlight — DRS Hiring + Faculty Mentorship</strong>
             <p data-i18n="lift_desc">Antelope Valley College is piloting two interlocking initiatives — a Diversity Resource Specialist (DRS) program that embeds trained classified staff into hiring committees, and an equity-focused faculty mentorship model that trains four faculty mentors and a pilot cohort of eight mentees in culturally responsive teaching. Both are anchored at the Santa Maria campus and run through the Joint CCD&rsquo;s Office of Human Resources and DEIA/EEO Committee.</p>
@@ -679,7 +686,7 @@
       </div>
 
       <!-- GOALS & OBJECTIVES -->
-      <div id="section-goals" class="section">
+      <div id="section-goals" class="section" role="region" aria-label="goals section">
         <div class="page-header">
           <h2 data-i18n="goals_title">Goals &amp; Objectives</h2>
           <p data-i18n="goals_sub">The two anchor goals from the AVC workplan (Section 2.1) — each with its activities, measurable outcomes, assessment plan, and responsible leadership.</p>
@@ -794,7 +801,7 @@
       </div>
 
       <!-- DISTRICTS -->
-      <div id="section-districts" class="section">
+      <div id="section-districts" class="section" role="region" aria-label="districts section">
         <div class="page-header"><h2 data-i18n="districts_title">Project Profile</h2><p data-i18n="districts_sub">Antelope Valley CCD &middot; Professional Development and EEO Representative Programs</p></div>
 
         <!-- Hero summary card -->
@@ -938,13 +945,13 @@
       </div>
 
       <!-- OUTCOMES -->
-      <div id="section-outcomes" class="section">
+      <div id="section-outcomes" class="section" role="region" aria-label="outcomes section">
         <div class="page-header"><h2 data-i18n="outcomes_title">Program Outcomes</h2><p data-i18n="outcomes_sub">Measurable outcomes for both AVC project goals — sourced from the application workplan (Section 2.3)</p></div>
         <div class="outcomes-grid" id="outcomes-grid"></div>
       </div>
 
       <!-- BUDGET -->
-      <div id="section-budget" class="section">
+      <div id="section-budget" class="section" role="region" aria-label="budget section">
         <div class="page-header"><h2 data-i18n="budget_title">Budget Breakdown</h2><p data-i18n="budget_sub">Total award $100,000 split across two budget years. Indirect line ($4,762) is 5% of direct costs ($95,238).</p></div>
 
         <div class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
@@ -958,7 +965,7 @@
       </div>
 
       <!-- TIMELINE -->
-      <div id="section-timeline" class="section">
+      <div id="section-timeline" class="section" role="region" aria-label="timeline section">
         <div class="page-header">
           <h2 data-i18n="timeline_title">Implementation Timeline</h2>
           <p data-i18n="timeline_sub">2-year funding cycle · Jan 1, 2026 → Jun 30, 2028. Activities and responsible persons for both project goals, sourced from the grant workplan (Section 2.4).</p>
@@ -1013,7 +1020,7 @@
       </div>
 
       <!-- CONTACTS -->
-      <div id="section-contacts" class="section">
+      <div id="section-contacts" class="section" role="region" aria-label="contacts section">
         <div class="page-header"><h2 data-i18n="contacts_title">Project Contacts</h2><p data-i18n="contacts_sub">Project leads, alternates, and fiscal reporters</p></div>
         <div class="card mb-24">
           <div class="card-header" style="background:var(--ccc-dark-blue);">
@@ -1034,7 +1041,7 @@
       </div>
 
       <!-- SPEND-DOWN MONITOR -->
-      <div id="section-spenddown" class="section">
+      <div id="section-spenddown" class="section" role="region" aria-label="spenddown section">
         <div class="page-header"><h2 data-i18n="spend_title">Spend-Down Monitor</h2><p data-i18n="spend_sub">Track Antelope Valley College's spend pace across the funding cycle and flag the project if Year 1 or Year 2 is at risk of underspending</p></div>
         <div class="alloc-kpi-row" id="spend-kpi-row"></div>
         <div class="card mb-24" id="underspend-alert-card">
@@ -1073,13 +1080,13 @@
 
   <nav class="mobile-nav">
     <div class="mobile-nav-inner">
-      <button class="mobile-nav-btn active" onclick="showSection('overview',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span data-i18n="nav_overview">Overview</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('goals',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span data-i18n="nav_goals">Goals</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('districts',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span data-i18n="nav_districts">Project Profile</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('budget',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span data-i18n="nav_budget">Budget</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('timeline',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span data-i18n="nav_timeline">Timeline</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('contacts',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="nav_contacts">Contacts</span></button>
-      <button class="mobile-nav-btn" onclick="showSection('spenddown',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span data-i18n="nav_spenddown">Spend</span></button>
+      <button class="mobile-nav-btn active" onclick="showSection('overview',this,true)" data-mobile-nav aria-label="Overview section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span data-i18n="nav_overview">Overview</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('goals',this,true)" data-mobile-nav aria-label="Goals section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span data-i18n="nav_goals">Goals</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('districts',this,true)" data-mobile-nav aria-label="Districts section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span data-i18n="nav_districts">Project Profile</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('budget',this,true)" data-mobile-nav aria-label="Budget section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span data-i18n="nav_budget">Budget</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('timeline',this,true)" data-mobile-nav aria-label="Timeline section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span data-i18n="nav_timeline">Timeline</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('contacts',this,true)" data-mobile-nav aria-label="Contacts section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="nav_contacts">Contacts</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('spenddown',this,true)" data-mobile-nav aria-label="Spenddown section"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span data-i18n="nav_spenddown">Spend</span></button>
     </div>
   </nav>
 </div>
@@ -1695,6 +1702,7 @@ function applyTranslation(lang) {
   document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 }
 function setLang(lang) {
+  try { document.documentElement.lang = arguments[0] || 'en'; } catch(e){}
   currentLang = lang;
   applyTranslation(lang);
   document.querySelectorAll('.lang-option').forEach(b => b.classList.remove('active'));
@@ -1723,8 +1731,8 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   const btn = document.getElementById('themeBtn');
   btn.innerHTML = isDark
-    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
   if (typeof initCharts === 'function') initCharts();
 }
 
@@ -1739,7 +1747,9 @@ function showSection(id, clickedBtn, isMobile) {
   // Sync sidebar highlight to the section being shown — covers refresh / deep-link too
   document.querySelectorAll('.sidebar .nav-item').forEach(n => {
     const onclick = n.getAttribute('onclick') || '';
-    n.classList.toggle('active', onclick.includes("'" + id + "'"));
+    const isActive = onclick.includes("'" + id + "'");
+    n.classList.toggle('active', isActive);
+    if (isActive) n.setAttribute('aria-current', 'page'); else n.removeAttribute('aria-current');
   });
   document.querySelectorAll('[data-mobile-nav]').forEach(n => {
     const onclick = n.getAttribute('onclick') || '';
@@ -1816,7 +1826,7 @@ function renderDistrictCards(filter) {
         </div>
         <div class="district-card-focus">${d.focus.map(f => '<span class="focus-tag">' + f + '</span>').join('')}</div>
         <div class="district-card-contact">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           ${d.contact.name} · <a href="mailto:${d.contact.email}" style="color:var(--ccc-medium-blue)">${d.contact.email}</a>
         </div>
       </div>
