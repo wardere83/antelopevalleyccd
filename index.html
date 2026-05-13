@@ -46,22 +46,31 @@
     .chart-grid > .chart-card > .chart-wrap > canvas { width: 100% !important; height: 100% !important; }
 
     :root {
-      /* ════════════ ANTELOPE VALLEY COLLEGE BRAND PALETTE ════════════
-           Minimalist + professional. Deep teal anchors, soft blue secondary,
-           warm sand for accent, crimson reserved for sparing highlights.
-           AVC Deep Teal (primary anchor):   #006B67
-           AVC Deep Teal Dark:                #004F4C
-           AVC Soft Blue (supporting):        #8DB9CA
-           AVC Soft Blue Light:               #B5D2DE
-           AVC Warm Sand (gold accent):       #E8C56C
-           AVC Crimson (sparing accent):      #7B1F35
+      /* ════════════ ANTELOPE VALLEY COLLEGE BRAND STANDARDS ════════════
+           Per the official AVC Brand Standards book.
+           PRIMARY:   Maroon  #8B1C40   Poppy  #F18A20   Blue  #8DB9CA
+           SECONDARY: Taupe   #A79B93   Teal   #006B67   Brown #604B3C
+           Sidebar/topbar anchor: Teal (secondary). Page-section titles +
+           hero card: Maroon (primary). Accents: Poppy + Blue. Neutrals:
+           Taupe + Brown + Cream.
         */
+      /* AVC brand-standards palette (per official brand book)
+         Primary:   Maroon #8B1C40, Poppy #F18A20, Blue #8DB9CA
+         Secondary: Taupe  #A79B93, Teal  #006B67, Brown #604B3C
+         The CSS variable names are kept generic so the dashboard structure
+         doesn't change; values are remapped onto the actual brand palette. */
       --ccc-dark-blue:#006B67; --ccc-darker-blue:#004F4C; --ccc-medium-blue:#8DB9CA;
-      --ccc-light-blue:#B5D2DE; --ccc-gold:#E8C56C; --ccc-dark-gold:#B5933A;
-      --avc-crimson:#8B1C40;  /* secondary anchor — mirrors avc.edu pairing */
-      --avc-orange:#F18A20;   /* Marauders orange — second logo color */
-      --avc-tint:#ECF5F7;   /* soft blue tint — backgrounds */
-      --avc-cream:#FEF3E9;  /* warm cream — secondary surfaces */
+      --ccc-light-blue:#B5D2DE; --ccc-gold:#A79B93; --ccc-dark-gold:#604B3C;
+      --avc-maroon:#8B1C40;   /* primary anchor */
+      --avc-crimson:#8B1C40;  /* alias for back-compat */
+      --avc-poppy:#F18A20;    /* primary accent (orange triangle in logo) */
+      --avc-orange:#F18A20;   /* alias for back-compat */
+      --avc-blue:#8DB9CA;     /* primary supporting */
+      --avc-teal:#006B67;     /* secondary anchor (sidebar) */
+      --avc-taupe:#A79B93;    /* secondary neutral */
+      --avc-brown:#604B3C;    /* secondary deep neutral */
+      --avc-tint:#ECF5F7;     /* soft blue tint */
+      --avc-cream:#FEF3E9;    /* warm cream surface */
       --ccc-light-gold:#FFE680; --ccc-dark-grey:#555759; --ccc-medium-grey:#717271; --ccc-light-grey:#B2B3B2;
       --bg:#F3F6F9; --bg-surface:#FFFFFF; --bg-surface-2:#EEF2F6; --bg-card:#FFFFFF;
       --border:rgba(0,62,90,0.12); --border-strong:rgba(0,62,90,0.22);
@@ -519,7 +528,7 @@
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a class="cccco-logo-link" href="https://www.avc.edu" target="_blank" rel="noopener noreferrer" aria-label="Antelope Valley College"><img class="avc-logo-img" src="avc-logo-white.svg" alt="Antelope Valley College" /></a>
+      <a class="cccco-logo-link" href="https://www.avc.edu" target="_blank" rel="noopener noreferrer" aria-label="Antelope Valley College"><img class="avc-logo-img" src="avc-logo-sidebar.svg" alt="Antelope Valley College" /></a>
       <div class="avc-project-name">LIFT Mentor Match Pilot Program</div>
     </div>
 
