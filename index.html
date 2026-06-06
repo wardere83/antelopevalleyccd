@@ -2248,7 +2248,7 @@ function yearBlockHTML(yk, rowState) {
         <td><input class="bmr-cell-input" type="text" data-bmr="description" value="${rs.description != null ? String(rs.description).replace(/"/g,'&quot;') : ''}" placeholder="${r.label}"></td>
         <td class="bmr-proposed bmr-num" data-bmr-proposed>${fmt(baseAmt)}</td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="actuals" value="${moneyVal(rs.actuals)}" placeholder="0"></td>
-        <td class="bmr-balance" data-bmr-balance>—</td>
+        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="balance" value="${moneyVal(rs.balance)}" placeholder="0"></td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="projections" value="${moneyVal(rs.projections)}" placeholder="0"></td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${moneyVal(rs.updates)}" placeholder="${baseAmt.toLocaleString()}"></td>
       </tr>`;
@@ -2269,7 +2269,7 @@ function yearBlockHTML(yk, rowState) {
               <th class="bmr-col-desc">Description</th>
               <th class="bmr-col-money bmr-num">Proposed Funds<small>current → modified</small></th>
               <th class="bmr-col-money bmr-num">Actuals<small>spent to date</small></th>
-              <th class="bmr-col-money bmr-num">Fund Balance<small>auto-calculated</small></th>
+              <th class="bmr-col-money bmr-num">Fund Balance<small>entered by district</small></th>
               <th class="bmr-col-money bmr-num">Projections<small>to be spent by Jun 2028</small></th>
               <th class="bmr-col-money bmr-num">Expenditure Updates<small>modified proposed amount</small></th>
             </tr>
@@ -2328,7 +2328,7 @@ function onBmrInput(e) {
 
 function onBmrBlur(e) {
   const field = e.target.getAttribute('data-bmr');
-  if (['actuals','projections','updates'].includes(field)) {
+  if (['actuals','balance','projections','updates'].includes(field)) {
     // Keep blank cells blank; only tidy formatting when a value was entered.
     if (e.target.value.trim() === '') { e.target.value = ''; return; }
     e.target.value = Number(parseMoney(e.target.value)).toLocaleString();
@@ -2356,18 +2356,11 @@ function bmrRecalc() {
       const modified = raw('updates') !== '' ? parseMoney(raw('updates')) : base;  // modification REPLACES it
       const actuals = parseMoney(raw('actuals'));
       const proj = parseMoney(raw('projections'));
-      const balance = modified - actuals;                  // Fund Balance auto-calculates
-      // Fund Balance stays empty until the user enters a change in the row.
-      const touched = raw('updates') !== '' || raw('actuals') !== '' || raw('projections') !== '';
+      const balance = parseMoney(raw('balance'));          // Fund Balance entered by the district
       const pEl = tr.querySelector('[data-bmr-proposed]');
       if (pEl) { pEl.textContent = fmt(modified); pEl.classList.toggle('modified', raw('updates') !== ''); }
-      const balEl = tr.querySelector('[data-bmr-balance]');
-      if (balEl) {
-        if (touched) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
-        else { balEl.textContent = '—'; balEl.classList.remove('neg'); }
-      }
       tProp += modified; tAct += actuals; tProj += proj; tBase += base;
-      if (touched) { tBal += balance; balTouched++; }
+      if (raw('balance') !== '') { tBal += balance; balTouched++; }
     });
     setText(block.querySelector('[data-bmr-total="proposed"]'), fmt(tProp));
     setText(block.querySelector('[data-bmr-total="actuals"]'), fmt(tAct));
@@ -2414,6 +2407,7 @@ function persistBmr() {
       rows[code] = {
         description: g('description'),
         actuals: g('actuals').trim() === '' ? null : parseMoney(g('actuals')),
+        balance: g('balance').trim() === '' ? null : parseMoney(g('balance')),   // entered by district
         projections: g('projections').trim() === '' ? null : parseMoney(g('projections')),
         updates: g('updates').trim() === '' ? null : parseMoney(g('updates'))   // modified proposed amount
       };
