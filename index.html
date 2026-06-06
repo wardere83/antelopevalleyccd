@@ -1131,13 +1131,13 @@
 
       <!-- BUDGET -->
       <div id="section-budget" class="section">
-        <div class="page-header"><h2 data-i18n="budget_title">Budget Breakdown</h2><p data-i18n="budget_sub">Total award $100,000 split across two budget years. Indirect line ($4,762) is 5% of direct costs ($95,238).</p></div>
+        <div class="page-header"><h2 data-i18n="budget_title">Budget Breakdown</h2><p data-i18n="budget_sub">Total award $100,000 split across two budget years. Indirect line ($5,000) is 5% of direct costs ($95,000).</p></div>
 
         <div class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
           <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label">Total Award</div><div class="kpi-value blue" id="kpi-total-award">$100,000</div><div class="kpi-sub">Tier 2 award</div></div>
-          <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label">Direct Costs</div><div class="kpi-value medium-blue" id="kpi-direct">$95,238</div><div class="kpi-sub" id="kpi-direct-sub">95% of total</div></div>
-          <div class="kpi-card"><div class="kpi-accent-bar gold"></div><div class="kpi-label">Indirect (7000)</div><div class="kpi-value gold" id="kpi-indirect">$4,762</div><div class="kpi-sub" id="kpi-indirect-sub">5% of direct</div></div>
-          <div class="kpi-card"><div class="kpi-accent-bar grey"></div><div class="kpi-label">Y1 / Y2 Split</div><div class="kpi-value grey" id="kpi-split">63% / 37%</div><div class="kpi-sub" id="kpi-split-sub">$62,627 / $37,373</div></div>
+          <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label">Direct Costs</div><div class="kpi-value medium-blue" id="kpi-direct">$95,000</div><div class="kpi-sub" id="kpi-direct-sub">95% of total</div></div>
+          <div class="kpi-card"><div class="kpi-accent-bar gold"></div><div class="kpi-label">Indirect (7000)</div><div class="kpi-value gold" id="kpi-indirect">$5,000</div><div class="kpi-sub" id="kpi-indirect-sub">5% of direct</div></div>
+          <div class="kpi-card"><div class="kpi-accent-bar grey"></div><div class="kpi-label">Y1 / Y2 Split</div><div class="kpi-value grey" id="kpi-split">60% / 40%</div><div class="kpi-sub" id="kpi-split-sub">$60,000 / $40,000</div></div>
         </div>
 
         <div class="budget-grid budget-grid--2col" id="budget-grid"></div>
@@ -1357,7 +1357,7 @@ const districts = [
     fiscalReporter:{name:'Christos Valiotis',role:'Fiscal Reporter',email:'cvaliotis@avc.edu',phone:'(661) 722-6300'},
     planApprover:{name:'Dr. Jennifer Zellet',role:'Plan Approver',email:'jennifer.zellet@avc.edu',phone:'(661) 722-6300'},
     budgetHighlights:{'Instructional Salaries (1000)':9000,'Non-Instructional Salaries (2000)':34085,'Other Operating & Services (5000)':56915},
-    yearlyBudget:{y1:40085,y2:59915},
+    yearlyBudget:{y1:60000,y2:40000},
     primaryFocus:'LIFT Mentorship Platform'
   }
 ];
@@ -2129,11 +2129,12 @@ function renderOutcomes() {
    downstream total updates live.
 ════════════════════════════════════════════════════════════════ */
 const BUDGET_BASELINE = [
-  { code:'1000', label:'Instructional Salaries',     y1:30720, y2:15360 },
-  { code:'3000', label:'Employee Benefits',          y1: 6666, y2: 3333 },
-  { code:'4000', label:'Supplies & Materials',       y1:  759, y2:  400 },
-  { code:'5000', label:'Other Operating & Services', y1:21500, y2:16500 },
-  { code:'7000', label:'Indirect',                   y1: 2982, y2: 1780 }
+  { code:'1000', label:'Instructional Salaries',     y1: 6000, y2: 3000 },
+  { code:'2000', label:'Non-Instructional Salaries', y1:34085, y2:20255 },
+  { code:'3000', label:'Employee Benefits',          y1:  740, y2:  320 },
+  { code:'4000', label:'Supplies & Materials',       y1: 2675, y2: 1925 },
+  { code:'5000', label:'Other Operating & Services', y1:13500, y2:12500 },
+  { code:'7000', label:'Indirect',                   y1: 3000, y2: 2000 }
 ];
 // Working copy that modifications mutate (deep clone of the baseline).
 let BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
@@ -2201,8 +2202,8 @@ function renderBudget() {
   const Y2 = BUDGET_MODEL.map(r => ({ code:r.code, label:`${r.code} - ${r.label}`, amount:r.y2 }));
   const Y1_TOTAL = Y1.reduce((s,r) => s + r.amount, 0);
   const Y2_TOTAL = Y2.reduce((s,r) => s + r.amount, 0);
-  const Y1_NOTE = 'Y1 (18 months) covers framework development, the first DRS training cohort, and the launch of the Faculty Mentorship Model. The 5000 line carries the mentorship-development and equity-specialist contracts.';
-  const Y2_NOTE = 'Y2 (12 months) emphasizes mentees in full training cycle, dissemination travel, and a second DRS cohort. The 5000 line stays heavy with the equity-specialist contract continuing through close-out.';
+  const Y1_NOTE = 'Y1 (18 months): the 2000 line (College/District campus lead, program coordination, tracking, reports, and the annual evaluation study, all provided by LIFT) is the largest cost; the 5000 line is the LIFT technology platform and regional meet-ups.';
+  const Y2_NOTE = 'Y2 (12 months) continues the LIFT-provided coordination, evaluation, and technology platform, with 1000 mentor/mentee training sessions and 4000 supplies and regional meet-up materials.';
   const renderLines = (rows, total) => rows.map(r => {
     const isIndirect = r.code === '7000';
     const cls = isIndirect ? ' indirect-line' : '';
