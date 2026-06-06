@@ -2139,18 +2139,28 @@ const budgetTotal  = () => BUDGET_MODEL.reduce((s,r) => s + codeProposed(r), 0);
 // Baseline amount for a given object code and project year ('y1' | 'y2').
 const baselineYear = (code, yk) => { const b = BUDGET_BASELINE.find(x => x.code === code); return b ? b[yk] : 0; };
 
-// Rebuild the whole model from the per-year modification requests. A budget
-// modification REPLACES the current proposed funds for a line in a specific
-// year (it is not added on top): the modified amount becomes the new proposed
-// funds. If no modification is on file for a line/year, its baseline stands.
-//   getModified(code, yearKey) -> number | null   (null = no modification)
-function applyBudgetMods(getModified) {
+// Resolve a line's modified proposed funds from what was typed in Expenditure
+// Updates, relative to the current (baseline) funds:
+//   "+5000"  -> ADD to current funds            (base + 5000)
+//   "-3000"  -> SUBTRACT from current funds      (base - 3000)
+//   "12000"  -> set as the new amount (replace)  (12000)
+//   blank    -> no change                        (base)
+function modifiedFromUpdates(base, raw) {
+  if (raw == null) return base;
+  const s = String(raw).trim();
+  if (s === '') return base;
+  const amt = parseMoney(s);
+  return /^[+\-−]/.test(s) ? base + amt : amt;   // leading sign = delta, else replacement
+}
+
+// Rebuild the whole model from the per-year modification requests.
+//   getRawUpdate(code, yearKey) -> string | null   (the raw Expenditure Updates entry)
+function applyBudgetMods(getRawUpdate) {
   BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
   BUDGET_BASELINE.forEach(bl => {
     const cur = BUDGET_MODEL.find(x => x.code === bl.code);
     ['y1', 'y2'].forEach(yk => {
-      const m = getModified(bl.code, yk);
-      cur[yk] = (m != null && !isNaN(m)) ? m : bl[yk];
+      cur[yk] = modifiedFromUpdates(bl[yk], getRawUpdate(bl.code, yk));
     });
   });
   districts[0].yearlyBudget = {
@@ -2220,7 +2230,7 @@ function renderBudget() {
    - All entries persist in localStorage.
 ════════════════════════════════════════════════════════════════ */
 const BMR_STORE = 'avc_budget_mod_form_v1';
-const parseMoney = s => { const n = parseFloat(String(s).replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; };
+const parseMoney = s => { const n = parseFloat(String(s).replace(/−/g, '-').replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; };
 
 function loadBmrState() {
   try { return JSON.parse(localStorage.getItem(BMR_STORE)) || {}; } catch(e) { return {}; }
@@ -2250,7 +2260,7 @@ function yearBlockHTML(yk, rowState) {
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="actuals" value="${moneyVal(rs.actuals)}" placeholder="0"></td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="balance" value="${moneyVal(rs.balance)}" placeholder="0"></td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="projections" value="${moneyVal(rs.projections)}" placeholder="0"></td>
-        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${moneyVal(rs.updates)}" placeholder="${baseAmt.toLocaleString()}"></td>
+        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${rs.updates != null ? String(rs.updates).replace(/"/g,'&quot;') : ''}" placeholder="+ / − or new amt"></td>
       </tr>`;
   }).join('');
   return `
@@ -2271,7 +2281,7 @@ function yearBlockHTML(yk, rowState) {
               <th class="bmr-col-money bmr-num">Actuals<small>spent to date</small></th>
               <th class="bmr-col-money bmr-num">Fund Balance<small>entered by district</small></th>
               <th class="bmr-col-money bmr-num">Projections<small>to be spent by Jun 2028</small></th>
-              <th class="bmr-col-money bmr-num">Expenditure Updates<small>modified proposed amount</small></th>
+              <th class="bmr-col-money bmr-num">Expenditure Updates<small>+ add / − reduce, or new amount</small></th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -2328,10 +2338,18 @@ function onBmrInput(e) {
 
 function onBmrBlur(e) {
   const field = e.target.getAttribute('data-bmr');
-  if (['actuals','balance','projections','updates'].includes(field)) {
+  const s = e.target.value.trim();
+  if (field === 'updates') {
+    // Preserve the leading +/− sign (it means add/subtract); just tidy the number.
+    if (s === '') { e.target.value = ''; return; }
+    const sign = /^\+/.test(s) ? '+' : (/^[-−]/.test(s) ? '−' : '');
+    e.target.value = sign + Number(Math.abs(parseMoney(s))).toLocaleString();
+    return;
+  }
+  if (['actuals','balance','projections'].includes(field)) {
     // Keep blank cells blank; only tidy formatting when a value was entered.
-    if (e.target.value.trim() === '') { e.target.value = ''; return; }
-    e.target.value = Number(parseMoney(e.target.value)).toLocaleString();
+    if (s === '') { e.target.value = ''; return; }
+    e.target.value = Number(parseMoney(s)).toLocaleString();
   }
 }
 
@@ -2353,7 +2371,7 @@ function bmrRecalc() {
       const code = tr.getAttribute('data-code');
       const raw = f => ((tr.querySelector(`[data-bmr="${f}"]`) || {}).value || '').trim();
       const base = baselineYear(code, yk);                 // current proposed funds (this year)
-      const modified = raw('updates') !== '' ? parseMoney(raw('updates')) : base;  // modification REPLACES it
+      const modified = modifiedFromUpdates(base, raw('updates'));  // +add / −reduce / replace
       const actuals = parseMoney(raw('actuals'));
       const proj = parseMoney(raw('projections'));
       const balance = parseMoney(raw('balance'));          // Fund Balance entered by the district
@@ -2409,7 +2427,7 @@ function persistBmr() {
         actuals: g('actuals').trim() === '' ? null : parseMoney(g('actuals')),
         balance: g('balance').trim() === '' ? null : parseMoney(g('balance')),   // entered by district
         projections: g('projections').trim() === '' ? null : parseMoney(g('projections')),
-        updates: g('updates').trim() === '' ? null : parseMoney(g('updates'))   // modified proposed amount
+        updates: g('updates').trim() === '' ? null : g('updates').trim()   // raw entry (may be +/− signed)
       };
     });
     state.years[yk].rows = rows;
