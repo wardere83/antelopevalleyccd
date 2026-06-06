@@ -397,7 +397,10 @@
     .bmr-card-head { background:var(--ccc-dark-blue); padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
     .bmr-title { font-family:var(--font-display); font-size:18px; font-weight:600; color:#fff; letter-spacing:-0.01em; }
     .bmr-subtitle { font-size:12px; color:rgba(255,255,255,0.72); margin-top:3px; line-height:1.45; max-width:760px; }
-    .bmr-badge { background:var(--ccc-gold); color:var(--ccc-darker-blue); font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:4px 11px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+    .bmr-badge { background:var(--ccc-gold); color:var(--ccc-darker-blue); font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:4px 11px; border-radius:20px; white-space:nowrap; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; min-width:88px; text-align:center; }
+    .bmr-badge-word { display:inline-block; opacity:1; transition:opacity 0.28s ease; }
+    .bmr-badge-word.flash-out { opacity:0; }
+    @media (prefers-reduced-motion: reduce) { .bmr-badge-word { transition:none; } }
     .bmr-card-body { padding:20px 22px 22px; }
 
     .bmr-meta-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 18px; margin-bottom:20px; }
@@ -1145,7 +1148,7 @@
               <div class="bmr-title">Budget Modification Request Form</div>
               <div class="bmr-subtitle">Please complete this form if you require substantial budget modifications, including the addition or elimination of expenditures. Enter a change in <strong>Expenditure Updates</strong> (+ to add, − to reduce) or revise <strong>Proposed Funds</strong>, Fund Balance and the Totals calculate automatically, and the Year 1 / Year 2 cards and project KPIs above update live.</div>
             </div>
-            <span class="bmr-badge">Interactive</span>
+            <span class="bmr-badge"><span class="bmr-badge-word" id="bmr-badge-word">CCCCO</span></span>
           </div>
           <div class="bmr-card-body">
             <div class="bmr-meta-grid">
@@ -2457,6 +2460,24 @@ function resetBudgetModForm() {
   renderBudgetModForm();
 }
 
+// Flash the form badge one word at a time at a comfortable reading pace.
+let badgeCycleTimer = null;
+function startBudgetBadgeCycle() {
+  const el = document.getElementById('bmr-badge-word');
+  if (!el || badgeCycleTimer) return;
+  const words = ['CCCCO', 'SUPPORTS', 'YOUR', 'JOURNEY!'];
+  let i = 0;
+  el.textContent = words[0];
+  badgeCycleTimer = setInterval(() => {
+    el.classList.add('flash-out');                 // fade the current word out
+    setTimeout(() => {
+      i = (i + 1) % words.length;
+      el.textContent = words[i];
+      el.classList.remove('flash-out');            // fade the next word in
+    }, 280);
+  }, 1000);                                         // ~1s per word — normal reading speed
+}
+
 /* ════════════ TIMELINE — 2 years ════════════ */
 function renderTimeline() {
   const container = document.getElementById('timeline-rows');
@@ -2874,6 +2895,7 @@ function renderAll() {
 document.addEventListener('DOMContentLoaded', () => {
   applySavedBudgetMods();   // fold saved budget modifications into the model first
   renderAll();
+  startBudgetBadgeCycle();  // flashing CCCCO SUPPORTS YOUR JOURNEY! capsule
   requestAnimationFrame(() => initCharts());
   // Restore the user's last active tab from URL hash or localStorage
   // Restore current year filter for the Underspend Risk Alerts
