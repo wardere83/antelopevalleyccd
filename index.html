@@ -2348,7 +2348,7 @@ function bmrRecalc() {
   const yearTotals = { y1:0, y2:0 };
   document.querySelectorAll('.bmr-year-block').forEach(block => {
     const yk = block.getAttribute('data-year');
-    let tProp = 0, tAct = 0, tBal = 0, tProj = 0, tBase = 0;
+    let tProp = 0, tAct = 0, tBal = 0, tProj = 0, tBase = 0, balTouched = 0;
     block.querySelectorAll('tbody tr').forEach(tr => {
       const code = tr.getAttribute('data-code');
       const raw = f => ((tr.querySelector(`[data-bmr="${f}"]`) || {}).value || '').trim();
@@ -2357,15 +2357,21 @@ function bmrRecalc() {
       const actuals = parseMoney(raw('actuals'));
       const proj = parseMoney(raw('projections'));
       const balance = modified - actuals;                  // Fund Balance auto-calculates
+      // Fund Balance stays empty until the user enters a change in the row.
+      const touched = raw('updates') !== '' || raw('actuals') !== '' || raw('projections') !== '';
       const pEl = tr.querySelector('[data-bmr-proposed]');
       if (pEl) { pEl.textContent = fmt(modified); pEl.classList.toggle('modified', raw('updates') !== ''); }
       const balEl = tr.querySelector('[data-bmr-balance]');
-      if (balEl) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
-      tProp += modified; tAct += actuals; tBal += balance; tProj += proj; tBase += base;
+      if (balEl) {
+        if (touched) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
+        else { balEl.textContent = '—'; balEl.classList.remove('neg'); }
+      }
+      tProp += modified; tAct += actuals; tProj += proj; tBase += base;
+      if (touched) { tBal += balance; balTouched++; }
     });
     setText(block.querySelector('[data-bmr-total="proposed"]'), fmt(tProp));
     setText(block.querySelector('[data-bmr-total="actuals"]'), fmt(tAct));
-    setText(block.querySelector('[data-bmr-total="balance"]'), fmt(tBal));
+    setText(block.querySelector('[data-bmr-total="balance"]'), balTouched ? fmt(tBal) : '—');
     setText(block.querySelector('[data-bmr-total="projections"]'), fmt(tProj));
     const net = tProp - tBase;
     setText(block.querySelector('[data-bmr-total="updates"]'), (net >= 0 ? '+' : '−') + fmt(Math.abs(net)));
