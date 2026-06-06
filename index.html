@@ -1121,7 +1121,7 @@
           <div class="bmr-card-head">
             <div>
               <div class="bmr-title">Budget Modification Request Form</div>
-              <div class="bmr-subtitle">Please complete this form if you require substantial budget modifications, including the addition or elimination of expenditures. Fund Balance and totals calculate automatically, and the Year 1 / Year 2 cards and project KPIs above update live as you revise Proposed Funds.</div>
+              <div class="bmr-subtitle">Please complete this form if you require substantial budget modifications, including the addition or elimination of expenditures. Enter a change in <strong>Expenditure Updates</strong> (+ to add, − to reduce) or revise <strong>Proposed Funds</strong> — Fund Balance and the Totals calculate automatically, and the Year 1 / Year 2 cards and project KPIs above update live.</div>
             </div>
             <span class="bmr-badge">Interactive</span>
           </div>
@@ -1144,7 +1144,7 @@
                     <th class="bmr-col-money bmr-num">Actuals<small>spent to date</small></th>
                     <th class="bmr-col-money bmr-num">Fund Balance<small>auto-calculated</small></th>
                     <th class="bmr-col-money bmr-num">Projections<small>to be spent by Jun 2028</small></th>
-                    <th class="bmr-col-notes">Expenditure Updates</th>
+                    <th class="bmr-col-money bmr-num">Expenditure Updates<small>+ add / − reduce</small></th>
                   </tr>
                 </thead>
                 <tbody id="bmr-rows"></tbody>
@@ -1155,7 +1155,7 @@
                     <td class="bmr-total-num" id="bmr-total-actuals">$0</td>
                     <td class="bmr-total-num" id="bmr-total-balance">$0</td>
                     <td class="bmr-total-num" id="bmr-total-projections">$0</td>
-                    <td></td>
+                    <td class="bmr-total-num" id="bmr-total-updates">+$0</td>
                   </tr>
                 </tfoot>
               </table>
@@ -2137,18 +2137,48 @@ let BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
 const codeProposed = r => r.y1 + r.y2;            // combined per-line budget
 const budgetTotal  = () => BUDGET_MODEL.reduce((s,r) => s + codeProposed(r), 0);
 
-// Apply a new Proposed Funds amount to a line, keeping its Y1/Y2 ratio.
-function setLineProposed(code, proposed) {
-  const r = BUDGET_MODEL.find(x => x.code === code);
-  if (!r) return;
-  const base = codeProposed(r);
-  if (base > 0) { const ratio = r.y1 / base; r.y1 = proposed * ratio; r.y2 = proposed - r.y1; }
-  else { r.y1 = proposed * (2/3); r.y2 = proposed - r.y1; }
-  // Keep district + timeline data aligned with the modified model.
+// Combined per-line budget = the line's modified Year1+Year2 total.
+const baselineCombined = code => { const b = BUDGET_BASELINE.find(x => x.code === code); return b ? b.y1 + b.y2 : 0; };
+
+// Rebuild the whole model from per-line modification inputs. For each object
+// code the modified budget = (Proposed Funds, or baseline if blank) + Update
+// delta. The amount is split across Year 1 / Year 2 by the line's BASELINE
+// ratio so the split stays stable no matter how often it is edited.
+//   getProposed(code) -> number | null   (null = blank, use baseline)
+//   getUpdate(code)   -> number | null   (null = blank, no change)
+function applyBudgetMods(getProposed, getUpdate) {
+  BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
+  BUDGET_BASELINE.forEach(bl => {
+    const base = bl.y1 + bl.y2;
+    const p = getProposed(bl.code);
+    const u = getUpdate(bl.code);
+    const effProposed = (p != null && !isNaN(p)) ? p : base;
+    const delta = (u != null && !isNaN(u)) ? u : 0;
+    const modified = effProposed + delta;
+    const cur = BUDGET_MODEL.find(x => x.code === bl.code);
+    const ratio = base > 0 ? bl.y1 / base : (2 / 3);
+    cur.y1 = modified * ratio;
+    cur.y2 = modified - cur.y1;
+  });
   districts[0].yearlyBudget = {
-    y1: BUDGET_MODEL.reduce((s,x) => s + x.y1, 0),
-    y2: BUDGET_MODEL.reduce((s,x) => s + x.y2, 0)
+    y1: BUDGET_MODEL.reduce((s, x) => s + x.y1, 0),
+    y2: BUDGET_MODEL.reduce((s, x) => s + x.y2, 0)
   };
+}
+
+// Recompute the model straight from the live form inputs, then refresh the
+// Budget cards/KPIs and the Timeline so the whole project reflects the change.
+function recomputeBudgetFromForm() {
+  const cellVal = (code, f) => {
+    const tr = document.querySelector(`#bmr-rows tr[data-code="${code}"]`);
+    if (!tr) return null;
+    const el = tr.querySelector(`[data-bmr="${f}"]`);
+    const raw = el ? el.value.trim() : '';
+    return raw === '' ? null : parseMoney(raw);
+  };
+  applyBudgetMods(code => cellVal(code, 'proposed'), code => cellVal(code, 'updates'));
+  renderBudget();
+  renderTimeline();
 }
 
 /* ════════════ BUDGET KPI CARDS — driven by BUDGET_MODEL ════════════ */
@@ -2241,7 +2271,7 @@ function renderBudgetModForm() {
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="actuals" value="${moneyVal(rs.actuals)}" placeholder="0"></td>
         <td class="bmr-balance" data-bmr-balance>—</td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="projections" value="${moneyVal(rs.projections)}" placeholder="0"></td>
-        <td><input class="bmr-cell-input" type="text" data-bmr="updates" value="${rs.updates != null ? String(rs.updates).replace(/"/g,'&quot;') : ''}" placeholder="Add / reduce / no change…"></td>
+        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${moneyVal(rs.updates)}" placeholder="+ add / − reduce"></td>
       </tr>`;
   }).join('');
 
@@ -2266,33 +2296,29 @@ function renderBudgetModForm() {
   bmrRecalc();
 }
 
-function revertLineToBaseline(code) {
-  const base = BUDGET_BASELINE.find(x => x.code === code);
-  const cur = BUDGET_MODEL.find(x => x.code === code);
-  if (base && cur) { cur.y1 = base.y1; cur.y2 = base.y2; }
-  districts[0].yearlyBudget = {
-    y1: BUDGET_MODEL.reduce((s,x) => s + x.y1, 0),
-    y2: BUDGET_MODEL.reduce((s,x) => s + x.y2, 0)
-  };
-}
-
 function onBmrInput(e) {
   const field = e.target.getAttribute('data-bmr');
-  if (field === 'proposed') {
-    const code = e.target.closest('tr').getAttribute('data-code');
-    // Blank Proposed Funds = no modification → keep the original budget for that line.
-    if (e.target.value.trim() === '') revertLineToBaseline(code);
-    else setLineProposed(code, parseMoney(e.target.value));
-    renderBudget();        // updates KPI + Y1/Y2 cards to incorporate the modification
-    renderTimeline();      // keeps the timeline totals aligned
+  const tr = e.target.closest('tr');
+  let budgetChanged = (field === 'proposed' || field === 'updates');
+  // When staff start filling a row, seed Proposed Funds with the current budget
+  // so the line's math is complete (the cell stays blank until the row is used).
+  if (tr && field !== 'proposed' && e.target.value.trim() !== '') {
+    const propEl = tr.querySelector('[data-bmr="proposed"]');
+    if (propEl && propEl.value.trim() === '') {
+      propEl.value = baselineCombined(tr.getAttribute('data-code')).toLocaleString();
+      budgetChanged = true;
+    }
   }
+  // Proposed Funds OR Expenditure Updates change the line's budget → re-flow
+  // the modification through the Year 1 / Year 2 cards, KPIs and Timeline.
+  if (budgetChanged) recomputeBudgetFromForm();
   bmrRecalc();
   persistBmr();
 }
 
 function onBmrBlur(e) {
   const field = e.target.getAttribute('data-bmr');
-  if (['proposed','actuals','projections'].includes(field)) {
+  if (['proposed','actuals','projections','updates'].includes(field)) {
     // Keep blank cells blank; only tidy formatting when a value was entered.
     if (e.target.value.trim() === '') { e.target.value = ''; return; }
     e.target.value = Number(parseMoney(e.target.value)).toLocaleString();
@@ -2300,26 +2326,33 @@ function onBmrBlur(e) {
 }
 
 function bmrRecalc() {
-  let tProposed = 0, tActuals = 0, tBalance = 0, tProj = 0;
+  let tProposed = 0, tActuals = 0, tBalance = 0, tProj = 0, tUpdates = 0;
   document.querySelectorAll('#bmr-rows tr').forEach(tr => {
+    const code = tr.getAttribute('data-code');
     const raw = f => ((tr.querySelector(`[data-bmr="${f}"]`) || {}).value || '').trim();
-    const proposed = parseMoney(raw('proposed')), actuals = parseMoney(raw('actuals')), proj = parseMoney(raw('projections'));
+    const touched = ['proposed','actuals','projections','updates'].some(f => raw(f) !== '');
+    // Modified line budget = (Proposed Funds, or current budget if blank) + Update delta.
+    const effProposed = raw('proposed') !== '' ? parseMoney(raw('proposed')) : baselineCombined(code);
+    const delta = parseMoney(raw('updates'));
+    const actuals = parseMoney(raw('actuals'));
+    const proj = parseMoney(raw('projections'));
+    const modified = effProposed + delta;
+    const balance = modified - actuals;            // Fund Balance auto-calculates
     const balEl = tr.querySelector('[data-bmr-balance]');
-    // Blank row stays blank ("—"); Fund Balance auto-calculates once Proposed Funds are entered.
-    if (raw('proposed') === '') {
+    if (!touched) {
       if (balEl) { balEl.textContent = '—'; balEl.classList.remove('neg'); }
     } else {
-      const balance = proposed - actuals;
       if (balEl) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
-      tBalance += balance;
+      tProposed += effProposed; tActuals += actuals; tBalance += balance; tProj += proj; tUpdates += delta;
     }
-    tProposed += proposed; tActuals += actuals; tProj += proj;
   });
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   set('bmr-total-proposed', fmt(tProposed));
   set('bmr-total-actuals', fmt(tActuals));
   set('bmr-total-balance', fmt(tBalance));
   set('bmr-total-projections', fmt(tProj));
+  const upEl = document.getElementById('bmr-total-updates');
+  if (upEl) upEl.textContent = (tUpdates >= 0 ? '+' : '−') + fmt(Math.abs(tUpdates));
 
   // Reconciliation summary reflects the LIVE project budget (baseline until a
   // modification is entered), measured against the fixed award ceiling.
@@ -2353,7 +2386,7 @@ function persistBmr() {
       proposed: g('proposed').trim() === '' ? null : parseMoney(g('proposed')),
       actuals: g('actuals').trim() === '' ? null : parseMoney(g('actuals')),
       projections: g('projections').trim() === '' ? null : parseMoney(g('projections')),
-      updates: g('updates')
+      updates: g('updates').trim() === '' ? null : parseMoney(g('updates'))
     };
   });
   saveBmrState(state);
@@ -2363,11 +2396,11 @@ function persistBmr() {
 // so the Year 1 / Year 2 cards and KPIs reflect them before first render.
 function applySavedBudgetMods() {
   const state = loadBmrState();
-  if (!state.rows) return;
-  Object.keys(state.rows).forEach(code => {
-    const p = state.rows[code] ? state.rows[code].proposed : null;
-    if (p != null && !isNaN(p)) setLineProposed(code, p);
-  });
+  const rows = state.rows || {};
+  applyBudgetMods(
+    code => (rows[code] && rows[code].proposed != null) ? rows[code].proposed : null,
+    code => (rows[code] && rows[code].updates  != null) ? rows[code].updates  : null
+  );
 }
 
 function resetBudgetModForm() {
