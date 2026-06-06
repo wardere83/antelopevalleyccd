@@ -408,6 +408,16 @@
     .bmr-textarea { resize:vertical; min-height:34px; line-height:1.4; }
     .bmr-input::placeholder, .bmr-textarea::placeholder { color:var(--text-muted); opacity:0.65; }
 
+    .bmr-year-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:18px; }
+    .bmr-year-label { font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--ccc-dark-blue); }
+    [data-theme="dark"] .bmr-year-label { color:var(--accent-light); }
+    .bmr-select { font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:8px 34px 8px 12px; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23717271' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; transition:border-color var(--transition),box-shadow var(--transition); }
+    .bmr-select:focus { outline:none; border-color:var(--ccc-dark-blue); box-shadow:0 0 0 3px rgba(0,107,103,0.12); }
+    .bmr-year-hint { font-size:12px; color:var(--text-muted); margin-left:auto; }
+    .bmr-year-hint strong { color:var(--ccc-dark-blue); font-weight:700; }
+    [data-theme="dark"] .bmr-year-hint strong { color:var(--accent-light); }
+    .bmr-year-cell { font-size:12px; font-weight:600; color:var(--ccc-medium-blue); white-space:nowrap; }
+
     .bmr-table-wrap { border:1px solid var(--border); border-radius:var(--radius-md); overflow-x:auto; -webkit-overflow-scrolling:touch; }
     .bmr-table { width:100%; border-collapse:collapse; min-width:920px; font-size:12.5px; }
     .bmr-table thead th { background:var(--bg-surface-2); color:var(--ccc-dark-blue); font-size:10.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; text-align:left; padding:10px 10px; border-bottom:2px solid var(--border-strong); vertical-align:bottom; white-space:nowrap; }
@@ -428,6 +438,8 @@
     .bmr-balance { text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--ccc-dark-blue); white-space:nowrap; padding-right:9px; }
     [data-theme="dark"] .bmr-balance { color:var(--accent-light); }
     .bmr-balance.neg { color:#c53030; }
+    .bmr-proposed { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text-secondary); white-space:nowrap; padding-right:9px; }
+    .bmr-proposed.modified { color:var(--ccc-dark-gold); font-weight:700; }
     .bmr-col-narrow { width:70px; }
     .bmr-col-money { width:120px; }
     .bmr-col-desc { min-width:150px; }
@@ -1133,6 +1145,15 @@
               <label class="bmr-field"><span class="bmr-field-label">Submission Date</span><input class="bmr-input" type="date" data-bmr-meta="date"></label>
             </div>
 
+            <div class="bmr-year-bar">
+              <span class="bmr-year-label">Budget Year for this Modification Request</span>
+              <select id="bmr-year-select" class="bmr-select" onchange="onBmrYearChange(this.value)">
+                <option value="y1">Year 1 — Jan 2026 to Jun 2027</option>
+                <option value="y2">Year 2 — Jul 2027 to Jun 2028</option>
+              </select>
+              <span class="bmr-year-hint" id="bmr-year-hint"></span>
+            </div>
+
             <div class="bmr-table-wrap">
               <table class="bmr-table">
                 <thead>
@@ -1140,11 +1161,11 @@
                     <th class="bmr-col-narrow">Expenditure Type<small>per original grant submission</small></th>
                     <th class="bmr-col-desc">Description</th>
                     <th class="bmr-col-narrow">Year</th>
-                    <th class="bmr-col-money bmr-num">Proposed Funds</th>
+                    <th class="bmr-col-money bmr-num">Proposed Funds<small>current → modified</small></th>
                     <th class="bmr-col-money bmr-num">Actuals<small>spent to date</small></th>
                     <th class="bmr-col-money bmr-num">Fund Balance<small>auto-calculated</small></th>
                     <th class="bmr-col-money bmr-num">Projections<small>to be spent by Jun 2028</small></th>
-                    <th class="bmr-col-money bmr-num">Expenditure Updates<small>+ add / − reduce</small></th>
+                    <th class="bmr-col-money bmr-num">Expenditure Updates<small>modified proposed amount</small></th>
                   </tr>
                 </thead>
                 <tbody id="bmr-rows"></tbody>
@@ -1168,9 +1189,9 @@
                 <div class="bmr-summary-sub">Fixed CCCCO Tier 2 grant award</div>
               </div>
               <div class="bmr-summary-card">
-                <div class="bmr-summary-label">Modified Budget</div>
+                <div class="bmr-summary-label">Modified Project Budget</div>
                 <div class="bmr-summary-value" id="bmr-sum-proposed">$100,000</div>
-                <div class="bmr-summary-sub">Sum of Proposed Funds</div>
+                <div class="bmr-summary-sub">Both years, after modifications</div>
               </div>
               <div class="bmr-summary-card grey">
                 <div class="bmr-summary-label">Variance vs Award</div>
@@ -1178,9 +1199,9 @@
                 <span class="bmr-reconcile-pill ok" id="bmr-sum-pill">Balanced</span>
               </div>
               <div class="bmr-summary-card gold">
-                <div class="bmr-summary-label">Spent + Projected</div>
-                <div class="bmr-summary-value" id="bmr-sum-spendproj">$0</div>
-                <div class="bmr-summary-sub" id="bmr-sum-spendproj-sub">Actuals + Projections</div>
+                <div class="bmr-summary-label" id="bmr-sum-year-label">Year 1 Budget</div>
+                <div class="bmr-summary-value" id="bmr-sum-year">$0</div>
+                <div class="bmr-summary-sub" id="bmr-sum-year-sub">Current · no change</div>
               </div>
             </div>
 
@@ -2137,48 +2158,27 @@ let BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
 const codeProposed = r => r.y1 + r.y2;            // combined per-line budget
 const budgetTotal  = () => BUDGET_MODEL.reduce((s,r) => s + codeProposed(r), 0);
 
-// Combined per-line budget = the line's modified Year1+Year2 total.
-const baselineCombined = code => { const b = BUDGET_BASELINE.find(x => x.code === code); return b ? b.y1 + b.y2 : 0; };
+// Baseline amount for a given object code and project year ('y1' | 'y2').
+const baselineYear = (code, yk) => { const b = BUDGET_BASELINE.find(x => x.code === code); return b ? b[yk] : 0; };
 
-// Rebuild the whole model from per-line modification inputs. For each object
-// code the modified budget = (Proposed Funds, or baseline if blank) + Update
-// delta. The amount is split across Year 1 / Year 2 by the line's BASELINE
-// ratio so the split stays stable no matter how often it is edited.
-//   getProposed(code) -> number | null   (null = blank, use baseline)
-//   getUpdate(code)   -> number | null   (null = blank, no change)
-function applyBudgetMods(getProposed, getUpdate) {
+// Rebuild the whole model from the per-year modification requests. A budget
+// modification REPLACES the current proposed funds for a line in a specific
+// year (it is not added on top): the modified amount becomes the new proposed
+// funds. If no modification is on file for a line/year, its baseline stands.
+//   getModified(code, yearKey) -> number | null   (null = no modification)
+function applyBudgetMods(getModified) {
   BUDGET_MODEL = BUDGET_BASELINE.map(r => ({ ...r }));
   BUDGET_BASELINE.forEach(bl => {
-    const base = bl.y1 + bl.y2;
-    const p = getProposed(bl.code);
-    const u = getUpdate(bl.code);
-    const effProposed = (p != null && !isNaN(p)) ? p : base;
-    const delta = (u != null && !isNaN(u)) ? u : 0;
-    const modified = effProposed + delta;
     const cur = BUDGET_MODEL.find(x => x.code === bl.code);
-    const ratio = base > 0 ? bl.y1 / base : (2 / 3);
-    cur.y1 = modified * ratio;
-    cur.y2 = modified - cur.y1;
+    ['y1', 'y2'].forEach(yk => {
+      const m = getModified(bl.code, yk);
+      cur[yk] = (m != null && !isNaN(m)) ? m : bl[yk];
+    });
   });
   districts[0].yearlyBudget = {
     y1: BUDGET_MODEL.reduce((s, x) => s + x.y1, 0),
     y2: BUDGET_MODEL.reduce((s, x) => s + x.y2, 0)
   };
-}
-
-// Recompute the model straight from the live form inputs, then refresh the
-// Budget cards/KPIs and the Timeline so the whole project reflects the change.
-function recomputeBudgetFromForm() {
-  const cellVal = (code, f) => {
-    const tr = document.querySelector(`#bmr-rows tr[data-code="${code}"]`);
-    if (!tr) return null;
-    const el = tr.querySelector(`[data-bmr="${f}"]`);
-    const raw = el ? el.value.trim() : '';
-    return raw === '' ? null : parseMoney(raw);
-  };
-  applyBudgetMods(code => cellVal(code, 'proposed'), code => cellVal(code, 'updates'));
-  renderBudget();
-  renderTimeline();
 }
 
 /* ════════════ BUDGET KPI CARDS — driven by BUDGET_MODEL ════════════ */
@@ -2251,27 +2251,41 @@ function saveBmrState(state) {
   try { localStorage.setItem(BMR_STORE, JSON.stringify(state)); } catch(e) {}
 }
 
+// The project year the form is currently showing ('y1' | 'y2').
+function currentYearKey() {
+  const sel = document.getElementById('bmr-year-select');
+  if (sel && sel.value) return sel.value;
+  const st = loadBmrState();
+  return st.selectedYear || 'y1';
+}
+const yearLabelOf = yk => yk === 'y2' ? 'Year 2' : 'Year 1';
+// Pull the saved modification rows for one year ({} if none).
+const yearRows = (state, yk) => (state.years && state.years[yk] && state.years[yk].rows) || {};
+
 function renderBudgetModForm() {
   const tbody = document.getElementById('bmr-rows');
   if (!tbody) return;
   const state = loadBmrState();
-  const rowState = state.rows || {};
+  const yk = state.selectedYear || 'y1';
+  const yearLabel = yearLabelOf(yk);
+  const sel = document.getElementById('bmr-year-select');
+  if (sel) sel.value = yk;
+  const rowState = yearRows(state, yk);
+  const moneyVal = v => (v != null ? Number(v).toLocaleString() : '');
   tbody.innerHTML = BUDGET_BASELINE.map(r => {
     const rs = rowState[r.code] || {};
     const isIndirect = r.code === '7000';
-    // Form starts BLANK — the current budget is shown only as a faint placeholder hint.
-    const baseProposed = Math.round(codeProposed(r));
-    const moneyVal = v => (v != null ? Number(v).toLocaleString() : '');
+    const baseAmt = r[yk];   // this year's current proposed funds for the line
     return `
       <tr data-code="${r.code}">
         <td><span class="bmr-code${isIndirect ? ' indirect' : ''}">${r.code}</span></td>
-        <td><input class="bmr-cell-input" type="text" data-bmr="description" value="${rs.description != null ? rs.description : ''}" placeholder="${r.label}"></td>
-        <td><input class="bmr-cell-input" type="text" data-bmr="year" value="${rs.year != null ? rs.year : ''}" placeholder="Y1 + Y2"></td>
-        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="proposed" value="${moneyVal(rs.proposed)}" placeholder="${baseProposed.toLocaleString()}"></td>
+        <td><input class="bmr-cell-input" type="text" data-bmr="description" value="${rs.description != null ? String(rs.description).replace(/"/g,'&quot;') : ''}" placeholder="${r.label}"></td>
+        <td><span class="bmr-year-cell">${yearLabel}</span></td>
+        <td class="bmr-proposed bmr-num" data-bmr-proposed>${fmt(baseAmt)}</td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="actuals" value="${moneyVal(rs.actuals)}" placeholder="0"></td>
         <td class="bmr-balance" data-bmr-balance>—</td>
         <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="projections" value="${moneyVal(rs.projections)}" placeholder="0"></td>
-        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${moneyVal(rs.updates)}" placeholder="+ add / − reduce"></td>
+        <td class="bmr-money-cell"><input class="bmr-cell-input bmr-num" type="text" inputmode="decimal" data-bmr="updates" value="${moneyVal(rs.updates)}" placeholder="${baseAmt.toLocaleString()}"></td>
       </tr>`;
   }).join('');
 
@@ -2290,72 +2304,81 @@ function renderBudgetModForm() {
   document.querySelectorAll('[data-bmr-meta]').forEach(el => {
     if (el.dataset.bmrBound) return;      // meta inputs are static — bind once
     el.dataset.bmrBound = '1';
-    el.addEventListener('input', persistBmr);
+    el.addEventListener('input', () => persistBmr());
   });
 
   bmrRecalc();
 }
 
+// Switching the year: save the CURRENT year's entries first (the dropdown has
+// already changed, so save under the previous year explicitly), then redraw.
+function onBmrYearChange(yk) {
+  const prev = (loadBmrState().selectedYear) || 'y1';
+  persistBmr(prev);
+  const state = loadBmrState();
+  state.selectedYear = (yk === 'y2') ? 'y2' : 'y1';
+  saveBmrState(state);
+  renderBudgetModForm();
+}
+
 function onBmrInput(e) {
   const field = e.target.getAttribute('data-bmr');
-  const tr = e.target.closest('tr');
-  let budgetChanged = (field === 'proposed' || field === 'updates');
-  // When staff start filling a row, seed Proposed Funds with the current budget
-  // so the line's math is complete (the cell stays blank until the row is used).
-  if (tr && field !== 'proposed' && e.target.value.trim() !== '') {
-    const propEl = tr.querySelector('[data-bmr="proposed"]');
-    if (propEl && propEl.value.trim() === '') {
-      propEl.value = baselineCombined(tr.getAttribute('data-code')).toLocaleString();
-      budgetChanged = true;
-    }
-  }
-  // Proposed Funds OR Expenditure Updates change the line's budget → re-flow
-  // the modification through the Year 1 / Year 2 cards, KPIs and Timeline.
-  if (budgetChanged) recomputeBudgetFromForm();
-  bmrRecalc();
   persistBmr();
+  // A modification (new proposed amount in Expenditure Updates) re-flows through
+  // the Year 1 / Year 2 cards, KPIs and Timeline for the whole project.
+  if (field === 'updates') recomputeBudgetFromState();
+  bmrRecalc();
 }
 
 function onBmrBlur(e) {
   const field = e.target.getAttribute('data-bmr');
-  if (['proposed','actuals','projections','updates'].includes(field)) {
+  if (['actuals','projections','updates'].includes(field)) {
     // Keep blank cells blank; only tidy formatting when a value was entered.
     if (e.target.value.trim() === '') { e.target.value = ''; return; }
     e.target.value = Number(parseMoney(e.target.value)).toLocaleString();
   }
 }
 
+// Recompute the live model from saved per-year modifications, then refresh the
+// Budget cards/KPIs and the Timeline so the whole project reflects the change.
+function recomputeBudgetFromState() {
+  applySavedBudgetMods();
+  renderBudget();
+  renderTimeline();
+}
+
 function bmrRecalc() {
-  let tProposed = 0, tActuals = 0, tBalance = 0, tProj = 0, tUpdates = 0;
+  const yk = currentYearKey();
+  const yearLabel = yearLabelOf(yk);
+  let tProposed = 0, tActuals = 0, tBalance = 0, tProj = 0, tBase = 0;
   document.querySelectorAll('#bmr-rows tr').forEach(tr => {
     const code = tr.getAttribute('data-code');
     const raw = f => ((tr.querySelector(`[data-bmr="${f}"]`) || {}).value || '').trim();
-    const touched = ['proposed','actuals','projections','updates'].some(f => raw(f) !== '');
-    // Modified line budget = (Proposed Funds, or current budget if blank) + Update delta.
-    const effProposed = raw('proposed') !== '' ? parseMoney(raw('proposed')) : baselineCombined(code);
-    const delta = parseMoney(raw('updates'));
+    const base = baselineYear(code, yk);                 // current proposed funds (this year)
+    const modified = raw('updates') !== '' ? parseMoney(raw('updates')) : base;  // modification REPLACES it
     const actuals = parseMoney(raw('actuals'));
     const proj = parseMoney(raw('projections'));
-    const modified = effProposed + delta;
-    const balance = modified - actuals;            // Fund Balance auto-calculates
+    const balance = modified - actuals;                  // Fund Balance auto-calculates
+    // Proposed Funds cell reflects the modification once one is entered.
+    const pEl = tr.querySelector('[data-bmr-proposed]');
+    if (pEl) { pEl.textContent = fmt(modified); pEl.classList.toggle('modified', raw('updates') !== ''); }
     const balEl = tr.querySelector('[data-bmr-balance]');
-    if (!touched) {
-      if (balEl) { balEl.textContent = '—'; balEl.classList.remove('neg'); }
-    } else {
-      if (balEl) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
-      tProposed += effProposed; tActuals += actuals; tBalance += balance; tProj += proj; tUpdates += delta;
-    }
+    if (balEl) { balEl.textContent = fmt(balance); balEl.classList.toggle('neg', balance < 0); }
+    tProposed += modified; tActuals += actuals; tBalance += balance; tProj += proj; tBase += base;
   });
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const setHTML = (id, v) => { const el = document.getElementById(id); if (el) el.innerHTML = v; };
   set('bmr-total-proposed', fmt(tProposed));
   set('bmr-total-actuals', fmt(tActuals));
   set('bmr-total-balance', fmt(tBalance));
   set('bmr-total-projections', fmt(tProj));
-  const upEl = document.getElementById('bmr-total-updates');
-  if (upEl) upEl.textContent = (tUpdates >= 0 ? '+' : '−') + fmt(Math.abs(tUpdates));
+  const net = tProposed - tBase;                          // net change to this year's budget
+  set('bmr-total-updates', (net >= 0 ? '+' : '−') + fmt(Math.abs(net)));
 
-  // Reconciliation summary reflects the LIVE project budget (baseline until a
-  // modification is entered), measured against the fixed award ceiling.
+  // Year selector hint
+  setHTML('bmr-year-hint', `${yearLabel} current budget: <strong>${fmt(tBase)}</strong>`);
+
+  // Reconciliation summary — whole project vs the fixed award ceiling.
   const award = districts[0].funding;
   const modifiedBudget = budgetTotal();
   const variance = modifiedBudget - award;
@@ -2369,26 +2392,32 @@ function bmrRecalc() {
     pill.className = 'bmr-reconcile-pill ' + (balanced ? 'ok' : 'warn');
     pill.textContent = balanced ? 'Balanced to award' : (variance > 0 ? 'Over award' : 'Under award');
   }
-  set('bmr-sum-spendproj', fmt(tActuals + tProj));
-  const spEl = document.getElementById('bmr-sum-spendproj-sub');
-  if (spEl) spEl.textContent = `${fmt(tActuals)} spent + ${fmt(tProj)} projected`;
+  // Selected-year budget card
+  set('bmr-sum-year-label', `${yearLabel} Budget`);
+  set('bmr-sum-year', fmt(tProposed));
+  set('bmr-sum-year-sub', `Current ${fmt(tBase)} · ${net === 0 ? 'no change' : (net > 0 ? '+' : '−') + fmt(Math.abs(net))}`);
 }
 
-function persistBmr() {
-  const state = { meta:{}, rows:{} };
+function persistBmr(ykOverride) {
+  const state = loadBmrState();
+  state.meta = state.meta || {};
   document.querySelectorAll('[data-bmr-meta]').forEach(el => { state.meta[el.getAttribute('data-bmr-meta')] = el.value; });
+  const yk = ykOverride || currentYearKey();
+  state.selectedYear = currentYearKey();
+  state.years = state.years || { y1:{ rows:{} }, y2:{ rows:{} } };
+  state.years[yk] = state.years[yk] || { rows:{} };
+  const rows = {};
   document.querySelectorAll('#bmr-rows tr').forEach(tr => {
     const code = tr.getAttribute('data-code');
     const g = f => { const el = tr.querySelector(`[data-bmr="${f}"]`); return el ? el.value : ''; };
-    state.rows[code] = {
+    rows[code] = {
       description: g('description'),
-      year: g('year'),
-      proposed: g('proposed').trim() === '' ? null : parseMoney(g('proposed')),
       actuals: g('actuals').trim() === '' ? null : parseMoney(g('actuals')),
       projections: g('projections').trim() === '' ? null : parseMoney(g('projections')),
-      updates: g('updates').trim() === '' ? null : parseMoney(g('updates'))
+      updates: g('updates').trim() === '' ? null : parseMoney(g('updates'))   // modified proposed amount
     };
   });
+  state.years[yk].rows = rows;
   saveBmrState(state);
 }
 
@@ -2396,11 +2425,10 @@ function persistBmr() {
 // so the Year 1 / Year 2 cards and KPIs reflect them before first render.
 function applySavedBudgetMods() {
   const state = loadBmrState();
-  const rows = state.rows || {};
-  applyBudgetMods(
-    code => (rows[code] && rows[code].proposed != null) ? rows[code].proposed : null,
-    code => (rows[code] && rows[code].updates  != null) ? rows[code].updates  : null
-  );
+  applyBudgetMods((code, yk) => {
+    const r = yearRows(state, yk)[code];
+    return (r && r.updates != null) ? r.updates : null;
+  });
 }
 
 function resetBudgetModForm() {
