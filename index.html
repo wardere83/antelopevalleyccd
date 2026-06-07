@@ -76,7 +76,7 @@
       --bg:#F3F6F9; --bg-surface:#FFFFFF; --bg-surface-2:#EEF2F6; --bg-card:#FFFFFF;
       --border:rgba(0,62,90,0.12); --border-strong:rgba(0,62,90,0.22);
       --text-primary:#1A1F2E; --text-secondary:#555759; --text-muted:#717271; --text-on-dark:#FFFFFF; --text-on-gold:#003E5A;
-      --accent:#003E5A; --accent-hover:#002A3A; --accent-secondary:#0033A0; --accent-light:#3B7EB9;
+      --accent:#003E5A; --accent-hover:#002A3A; --accent-secondary:#0033A0; --accent-light:#3B7EB9; --fig-color:var(--ccc-dark-blue);
       --accent-gold:#FFCD00; --accent-dark-gold:#E5B800;
       --tier1-color:#003E5A; --tier1-bg:rgba(0,62,90,0.08);
       --tier2-color:#0033A0; --tier2-bg:rgba(0,51,160,0.08);
@@ -94,7 +94,7 @@
       --bg:#0D1526; --bg-surface:#131D35; --bg-surface-2:#192340; --bg-card:#192340;
       --border:rgba(64,180,229,0.15); --border-strong:rgba(64,180,229,0.28);
       --text-primary:#E8EDF8; --text-secondary:#A8B4CC; --text-muted:#6B7A99; --text-on-dark:#FFFFFF;
-      --accent:#40B4E5; --accent-hover:#5EC5F0; --accent-light:#40B4E5;
+      --accent:#40B4E5; --accent-hover:#5EC5F0; --accent-light:#40B4E5; --fig-color:var(--accent-light);
       --tier1-color:#40B4E5; --tier1-bg:rgba(64,180,229,0.12);
       --tier2-color:#5EC5F0; --tier2-bg:rgba(94,197,240,0.10);
       --lift-color:#FFCD00; --lift-bg:rgba(255,205,0,0.14);
@@ -195,6 +195,7 @@
     .kpi-value.medium-blue { color:var(--ccc-medium-blue); }
     .kpi-value.gold { color:var(--ccc-dark-gold); }
     .kpi-value.grey { color:var(--ccc-dark-grey); }
+    [data-theme="dark"] .kpi-value.grey { color:var(--text-secondary); }
     .kpi-value.green { color:var(--success); }
     [data-theme="dark"] .kpi-value.blue { color:var(--accent-light); }
     [data-theme="dark"] .kpi-value.medium-blue { color:#5EC5F0; }
@@ -482,6 +483,7 @@
     .bmr-actions { display:flex; gap:10px; flex-wrap:wrap; }
     .bmr-btn { font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:var(--radius-md); border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); cursor:pointer; transition:all var(--transition); white-space:nowrap; }
     .bmr-btn:hover { background:var(--bg-surface-2); border-color:var(--ccc-dark-blue); color:var(--ccc-dark-blue); }
+    [data-theme="dark"] .bmr-btn:hover { color:var(--accent-light); border-color:var(--accent-light); }
     .bmr-btn.primary { background:var(--ccc-dark-blue); border-color:var(--ccc-dark-blue); color:#fff; }
     .bmr-btn.primary:hover { background:var(--ccc-darker-blue); color:#fff; }
     .bmr-saved-note { font-size:11px; color:var(--text-muted); margin-top:10px; display:flex; align-items:center; gap:6px; }
@@ -1039,23 +1041,23 @@
           <div class="card-body">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
               <div style="padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;">
-                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ccc-dark-blue);line-height:1;">14,000+</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--fig-color);line-height:1;">14,000+</div>
                 <div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;letter-spacing:0.04em;">Students enrolled</div>
               </div>
               <div style="padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;">
-                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ccc-dark-blue);line-height:1;">70%</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--fig-color);line-height:1;">70%</div>
                 <div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;letter-spacing:0.04em;">Identify as Hispanic / Latino</div>
               </div>
               <div style="padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;">
-                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ccc-dark-blue);line-height:1;">64%</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--fig-color);line-height:1;">64%</div>
                 <div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;letter-spacing:0.04em;">Economically disadvantaged</div>
               </div>
               <div style="padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;">
-                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ccc-dark-blue);line-height:1;">39%</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--fig-color);line-height:1;">39%</div>
                 <div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;letter-spacing:0.04em;">First-generation college</div>
               </div>
               <div style="padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;">
-                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ccc-dark-blue);line-height:1;">65%</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--fig-color);line-height:1;">65%</div>
                 <div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;letter-spacing:0.04em;">BIPOC classified staff</div>
               </div>
             </div>
@@ -2827,7 +2829,7 @@ function renderSpendDown() {
       // Header summary row: read-only totals for the year, no buttons (only line items carry Pace/Status)
       const headerRow =
         '<tr class="spend-year-row" data-year-key="' + p.id + '">' +
-          '<td style="border-left:4px solid ' + yearBandColor + ';padding-left:14px;"><strong style="font-size:14px;color:var(--ccc-dark-blue);">' + p.label + '</strong><br><span style="font-size:11px;color:var(--text-muted)">' + p.dates + ' · ' + p.role + '</span></td>' +
+          '<td style="border-left:4px solid ' + yearBandColor + ';padding-left:14px;"><strong style="font-size:14px;color:var(--fig-color);">' + p.label + '</strong><br><span style="font-size:11px;color:var(--text-muted)">' + p.dates + ' · ' + p.role + '</span></td>' +
           '<td class="amount" style="font-weight:700;">' + fmt(p.budget) + '</td>' +
           '<td class="amount" style="font-weight:700;">' + pct + '% of total</td>' +
           '<td><span style="font-size:11px;color:var(--text-muted);font-weight:700;">' + p.year + '</span></td>' +
