@@ -2656,6 +2656,22 @@ function renderBudget() {
 const BMR_STORE = 'avc_budget_mod_form_v1';
 const parseMoney = s => { const n = parseFloat(String(s).replace(/−/g, '-').replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; };
 
+// One-time cleanup: earlier ahc-dashboard revisions used the same BMR_STORE
+// key ('avc_budget_mod_form_v1') on wardere83.github.io, which leaked AHC data
+// (LeeAnne meta, AHC year-row justifications) into this dashboard. Clear it if
+// the loaded state clearly belongs to another district.
+(function migrateBmrStore(){
+  try {
+    const raw = localStorage.getItem(BMR_STORE);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    const meta = (s && s.meta) || {};
+    const isForeign = (meta.district && !/antelope|avc/i.test(meta.district)) ||
+                      (meta.email && /hancockcollege/i.test(meta.email));
+    if (isForeign) localStorage.removeItem(BMR_STORE);
+  } catch (e) {}
+})();
+
 function loadBmrState() {
   try { return JSON.parse(localStorage.getItem(BMR_STORE)) || {}; } catch(e) { return {}; }
 }
